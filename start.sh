@@ -1,0 +1,1 @@
+node-red -p 1882 -u flows

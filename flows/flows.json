@@ -1,0 +1,170 @@
+[
+    {
+        "id": "5415a6c8d25fedc0",
+        "type": "tab",
+        "label": "Gitlab from MD",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6b54369c573cb081",
+        "type": "file in",
+        "z": "5415a6c8d25fedc0",
+        "name": "Read File",
+        "filename": "/home/nicolas/Data/TaskManagement/EL/ToGitlab.md",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 260,
+        "y": 40,
+        "wires": [
+            [
+                "6147bfa29b3f5c52"
+            ]
+        ]
+    },
+    {
+        "id": "d016c9194f49531f",
+        "type": "debug",
+        "z": "5415a6c8d25fedc0",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "671991b7275da771",
+        "type": "inject",
+        "z": "5415a6c8d25fedc0",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "6b54369c573cb081"
+            ]
+        ]
+    },
+    {
+        "id": "6147bfa29b3f5c52",
+        "type": "function",
+        "z": "5415a6c8d25fedc0",
+        "name": "Markdown to []",
+        "func": "return ({ ...msg, payload: msg.payload\n    .split(\"\\n## \")\n    .filter((l, i) => i>0 && l !== \"\") });",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 40,
+        "wires": [
+            [
+                "72c31e6db5e8b2f5"
+            ]
+        ]
+    },
+    {
+        "id": "b7a84c33faebcbf8",
+        "type": "http request",
+        "z": "5415a6c8d25fedc0",
+        "name": "Send Issue",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://gitlab.com/api/v4/projects/74387023/issues",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "PRIVATE-TOKEN",
+                "valueType": "other",
+                "valueValue": "..."
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 350,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3c6a5390f08f5704",
+        "type": "function",
+        "z": "5415a6c8d25fedc0",
+        "name": "Build issue data",
+        "func": "const [head, ...tail] = msg.payload.split(\"\\n\");\n\nfunction parseTaskHead(text) {\n  // Extraire tous les @mentions (labels)\n  const labelRegex = /@(\\S+)/g;\n  const labels = [];\n  let match;\n  \n  while ((match = labelRegex.exec(text)) !== null) {\n    // Remplacer les underscores par des espaces dans les labels\n    labels.push(match[1].replace(/_/g, ' '));\n  }\n  \n  // Retirer tous les @mentions pour obtenir le titre\n  const title = text.replace(/@\\S+/g, '').trim();\n  \n  return {\n    title: title,\n    labels: labels\n  };\n}\n\nconst { title, labels } = parseTaskHead(head);\n\nmsg.payload = {\n    title,\n    description: tail.join(\"\\n\"),\n    labels,\n    assignee_ids: []\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 140,
+        "y": 240,
+        "wires": [
+            [
+                "b7a84c33faebcbf8"
+            ]
+        ]
+    },
+    {
+        "id": "72c31e6db5e8b2f5",
+        "type": "split",
+        "z": "5415a6c8d25fedc0",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 310,
+        "y": 140,
+        "wires": [
+            [
+                "3c6a5390f08f5704"
+            ]
+        ]
+    }
+]

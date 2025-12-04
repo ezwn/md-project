@@ -1,0 +1,11 @@
+# Node.js
+node_modules/
+
+# Node-RED sensitive files
+flows_cred.json
+.config.runtime.json
+.config.users.json
+.config.nodes.json
+
+# Backups
+*.backup
