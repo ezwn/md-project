@@ -112,7 +112,7 @@
                 "keyType": "other",
                 "keyValue": "PRIVATE-TOKEN",
                 "valueType": "other",
-                "valueValue": "..."
+                "valueValue": "${GITLAB_PRIVATE_TOKEN}"
             },
             {
                 "keyType": "other",
@@ -124,7 +124,9 @@
         "x": 350,
         "y": 400,
         "wires": [
-            []
+            [
+                "d016c9194f49531f"
+            ]
         ]
     },
     {

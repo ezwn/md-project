@@ -9,3 +9,6 @@ flows_cred.json
 
 # Backups
 *.backup
+
+# Environment variables
+.env
