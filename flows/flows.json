@@ -12,7 +12,7 @@
         "type": "file in",
         "z": "5415a6c8d25fedc0",
         "name": "Read File",
-        "filename": "/home/nicolas/Data/TaskManagement/EL/ToGitlab.md",
+        "filename": "${MD_PROJECT_SOURCE_FILE}",
         "filenameType": "str",
         "format": "utf8",
         "chunk": false,
@@ -112,7 +112,7 @@
                 "keyType": "other",
                 "keyValue": "PRIVATE-TOKEN",
                 "valueType": "other",
-                "valueValue": "..."
+                "valueValue": "${GITLAB_PRIVATE_TOKEN}"
             },
             {
                 "keyType": "other",
@@ -124,7 +124,9 @@
         "x": 350,
         "y": 400,
         "wires": [
-            []
+            [
+                "d016c9194f49531f"
+            ]
         ]
     },
     {
