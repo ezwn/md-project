@@ -8,6 +8,14 @@
         "env": []
     },
     {
+        "id": "9d01cfcf5320fc34",
+        "type": "tab",
+        "label": "Gitlab to MD",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "6b54369c573cb081",
         "type": "file in",
         "z": "5415a6c8d25fedc0",
@@ -166,6 +174,122 @@
         "wires": [
             [
                 "3c6a5390f08f5704"
+            ]
+        ]
+    },
+    {
+        "id": "fb0fe472a1555830",
+        "type": "inject",
+        "z": "9d01cfcf5320fc34",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "bd76050da1c008ca"
+            ]
+        ]
+    },
+    {
+        "id": "bd76050da1c008ca",
+        "type": "http request",
+        "z": "9d01cfcf5320fc34",
+        "name": "Select issues with VEI label",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://gitlab.com/api/v4/projects/74387023/issues?labels=VEI",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "PRIVATE-TOKEN",
+                "valueType": "other",
+                "valueValue": "${GITLAB_PRIVATE_TOKEN}"
+            }
+        ],
+        "x": 350,
+        "y": 140,
+        "wires": [
+            [
+                "fba073b099c1293f"
+            ]
+        ]
+    },
+    {
+        "id": "1fb958d05a92c715",
+        "type": "debug",
+        "z": "9d01cfcf5320fc34",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "2a0958b371a7ff8e",
+        "type": "file",
+        "z": "9d01cfcf5320fc34",
+        "name": "Write file",
+        "filename": "${MD_PROJECT_TARGET_FILE}",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 800,
+        "y": 160,
+        "wires": [
+            [
+                "1fb958d05a92c715"
+            ]
+        ]
+    },
+    {
+        "id": "fba073b099c1293f",
+        "type": "function",
+        "z": "9d01cfcf5320fc34",
+        "name": "function 1",
+        "func": "\nreturn { ...msg,\n    payload: msg.payload.map(it => \n        `## ${it.title}`).join(\"\\n\")\n };",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 160,
+        "wires": [
+            [
+                "2a0958b371a7ff8e"
             ]
         ]
     }
